@@ -1,5 +1,6 @@
-const createApp = require("./server");
-const fetch = require("node-fetch");
+require("dotenv").config();
+
+const { createApp } = require("./server");
 
 const app = createApp(fetch);
 
