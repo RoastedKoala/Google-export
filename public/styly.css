@@ -1,0 +1,189 @@
+/* RESET */
+* {
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    background-color: lightsteelblue;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* CONTAINER */
+.container {
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+
+    flex: 1;
+}
+
+/* INPUT + BUTTONY */
+input, button, select {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+input {
+    width: 300px;
+    max-width: 100%;
+}
+
+/* POZADÍ */
+.pruhledne-pozadi {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 80%;
+    height: 80%;
+
+    background-image: url("obrazek.jpg");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* VÝSLEDKY */
+.result {
+    background: white;
+    margin: 10px auto;
+    padding: 10px;
+
+    width: 100%;
+    max-width: 700px;
+
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.result a {
+    display: block;
+    font-size: 18px;
+    text-decoration: none;
+    color: #1a0dab;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.result p {
+    color: #444;
+    font-size: 14px;
+}
+
+/* SPINNER */
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ccc;
+    border-top: 2px solid #333;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* SKELETON */
+.skeleton {
+    background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+    background-size: 200% 100%;
+    animation: loading 1.2s infinite;
+    border-radius: 6px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-title {
+    height: 18px;
+    width: 60%;
+    margin-bottom: 10px;
+}
+
+.skeleton-text {
+    height: 14px;
+    width: 90%;
+    margin-bottom: 6px;
+}
+
+/* FADE-IN */
+.fade-in {
+    animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* POZNÁMKA */
+.end-note {
+    font-size: 12px;
+    color: #555;
+    margin: 40px 0 20px 0;
+    opacity: 0.8;
+    text-align: center;
+}
+
+.end-note p {
+    margin: 0;
+}
+
+/* MOBIL */
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    input,
+    button,
+    select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .result {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .result a {
+        font-size: 16px;
+    }
+}

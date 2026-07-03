@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styly.css">
+    <title>Export vyhledávání přes Google</title>
+</head>
+
+<body>  
+
+<div class="container">
+    
+    <h1>Zde můžete jednoduše exportovat výsledky vyhledávání přes Google</h1>
+    <p>Zadejte text níže</p>
+
+    <input 
+        type="text" 
+        id="searchInput"
+        placeholder="Např. Notebooky"
+    >
+
+    <button id="searchButton" onclick="search()">
+        Hledat <span id="spinner" class="spinner" style="display:none;"></span>
+    </button>
+
+    <button id="downloadButton" onclick="download()">
+        Stáhnout
+    </button>
+
+    <select id="formatSelect">
+        <option value="json">JSON</option>
+        <option value="csv">CSV (Excel)</option>
+        <option value="txt">TXT</option>
+    </select>
+
+    <div id="results"></div>
+
+</div>
+
+<div class="pruhledne-pozadi"></div>
+
+<script>
+let data = [];
+
+// SPINNER
+function toggleSpinner(show) {
+    document.getElementById("spinner").style.display = show ? "inline-block" : "none";
+}
+
+// SKELETON
+function showSkeleton() {
+    const container = document.getElementById("results");
+
+    container.innerHTML = Array(5).fill(`
+        <div class="result">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width:70%"></div>
+        </div>
+    `).join("");
+}
+
+// HLEDÁNÍ
+async function search() {
+    const q = document.getElementById("searchInput").value;
+
+    if (!q) {
+        alert("Zadej vyhledávací dotaz");
+        return;
+    }
+
+    showSkeleton();
+    toggleSpinner(true);
+
+    try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+
+        if (!res.ok) {
+            throw new Error("Chyba při volání API");
+        }
+
+        data = await res.json();
+
+        const container = document.getElementById("results");
+
+        if (data.length === 0) {
+            container.innerHTML = "<p>Žádné výsledky</p>";
+            return;
+        }
+
+        container.innerHTML = data.map(item => `
+            <div class="result fade-in">
+                <a href="${item.link}" target="_blank">${item.title}</a>
+                <p>${item.snippet || ""}</p>
+            </div>
+        `).join("");
+
+    } catch (err) {
+        document.getElementById("results").textContent =
+            "Chyba: " + err.message;
+    } finally {
+        toggleSpinner(false);
+    }
+}
+
+// STAŽENÍ
+function download() {
+    if (data.length === 0) {
+        alert("Nejsou žádná data ke stažení");
+        return;
+    }
+
+    const format = document.getElementById("formatSelect").value;
+
+    let content = "";
+    let type = "";
+    let filename = "";
+
+    if (format === "json") {
+        content = JSON.stringify(data, null, 2);
+        type = "application/json";
+        filename = "results.json";
+    }
+
+    if (format === "csv") {
+        const header = "title,link,snippet\n";
+        const rows = data.map(item =>
+            `"${item.title}","${item.link}","${item.snippet || ""}"`
+        ).join("\n");
+
+        content = header + rows;
+        type = "text/csv";
+        filename = "results.csv";
+    }
+
+    if (format === "txt") {
+        content = data.map((item, i) => `
+${i + 1}. ${item.title}
+${item.link}
+${item.snippet || ""}
+-------------------------
+        `).join("\n");
+
+        type = "text/plain";
+        filename = "results.txt";
+    }
+
+    const blob = new Blob([content], { type });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+}
+
+// ENTER = hledání
+document.getElementById("searchInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        search();
+    }
+});
+</script>
+
+<footer class="end-note">
+    <p>
+        * Výsledky jsou získávány pomocí SerpAPI a obsahují pouze organické (neplacené) výsledky vyhledávání. 
+        Vytvořeno za asistence ChatGPT a tutoriálů na internetu. - VHC Iniciative -
+    </p>
+</footer>
+
+</body>
+</html>
