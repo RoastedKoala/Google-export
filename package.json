@@ -4,16 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-  "start": "node index.js",
-  "test": "jest --detectOpenHandles"
-},
+    "start": "node index.js",
+    "test": "jest --detectOpenHandles"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1",
-    "node-fetch": "^3.3.2"
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
   },
   "devDependencies": {
     "jest": "^30.4.2",
