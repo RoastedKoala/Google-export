@@ -18,18 +18,22 @@ function createApp(fetch) {
     app.get("/api/search", async (req, res) => {
         try {
             const q = req.query.q;
+
+            // validace inputu
             if (!q) {
-    return res.status(400).json({ error: "Missing query" });
-}
+                return res.status(400).json({ error: "Missing query" });
+            }
 
             const url = `https://serpapi.com/search.json?q=${encodeURIComponent(q)}&engine=google&api_key=${process.env.SERPAPI_KEY}`;
 
             const response = await fetch(url);
             const json = await response.json();
-            
+
+            // validace API odpovědi
             if (json.error) {
-    return res.status(500).json({ error: json.error });
-}
+                return res.status(500).json({ error: json.error });
+            }
+
             res.json(mapResults(json));
 
         } catch (err) {
@@ -37,13 +41,6 @@ function createApp(fetch) {
             res.status(500).json({ error: "API request failed" });
         }
     });
-
-    return app;
-}
-
-module.exports = {
-    createApp
-};
 
     return app;
 }
