@@ -23,7 +23,8 @@ function createApp(fetch) {
             if (!q) {
                 return res.status(400).json({ error: "Missing query" });
             }
-
+            if (!process.env.SERPAPI_KEY) { return res.status(500).json({ error: "Missing API key" }); }
+                
             const url = `https://serpapi.com/search.json?q=${encodeURIComponent(q)}&engine=google&api_key=${process.env.SERPAPI_KEY}`;
 
             const response = await fetch(url);
